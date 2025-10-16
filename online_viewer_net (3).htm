@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Color Flip Clock</title>
+<style>
+  body {
+    background:#0f1724;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    margin:0;
+    font-family:monospace;
+  }
+  .clock {
+    display:flex;
+    gap:12px;
+  }
+  .digit {
+    position:relative;
+    width:80px;
+    height:120px;
+    perspective:1000px;
+  }
+  .digit .card {
+    position:absolute;
+    width:100%;
+    height:100%;
+    color:#fff;
+    font-size:72px;
+    font-weight:bold;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    border-radius:8px;
+    backface-visibility:hidden;
+    transform-style:preserve-3d;
+    transition:transform 0.6s ease-in-out;
+    box-shadow:0 6px 18px rgba(0,0,0,.6);
+    text-shadow:0 0 12px rgba(255,255,255,.6);
+  }
+  /* gradient backgrounds for variety */
+  #h1 .card { background:linear-gradient(180deg,#ef4444,#991b1b); }
+  #h2 .card { background:linear-gradient(180deg,#f97316,#9a3412); }
+  #m1 .card { background:linear-gradient(180deg,#22c55e,#166534); }
+  #m2 .card { background:linear-gradient(180deg,#06b6d4,#0e7490); }
+  #s1 .card { background:linear-gradient(180deg,#6366f1,#312e81); }
+  #s2 .card { background:linear-gradient(180deg,#e879f9,#86198f); }
+
+  .digit .front { transform:rotateX(0deg); }
+  .digit .back  { transform:rotateX(180deg); }
+  .digit.flip .front { transform:rotateX(-180deg); }
+  .digit.flip .back  { transform:rotateX(0deg); }
+
+  .colon {
+    font-size:72px;
+    color:#facc15;
+    align-self:center;
+    text-shadow:0 0 12px #facc15;
+  }
+</style>
+</head>
+<body>
+  <div class="clock" id="clock">
+    <div class="digit" id="h1"><div class="card front">0</div><div class="card back">0</div></div>
+    <div class="digit" id="h2"><div class="card front">0</div><div class="card back">0</div></div>
+    <div class="colon">:</div>
+    <div class="digit" id="m1"><div class="card front">0</div><div class="card back">0</div></div>
+    <div class="digit" id="m2"><div class="card front">0</div><div class="card back">0</div></div>
+    <div class="colon">:</div>
+    <div class="digit" id="s1"><div class="card front">0</div><div class="card back">0</div></div>
+    <div class="digit" id="s2"><div class="card front">0</div><div class="card back">0</div></div>
+  </div>
+
+<script>
+function pad(n){return n<10?'0'+n:''+n;}
+function updateClock(){
+  const now=new Date();
+  const time=pad(now.getHours())+pad(now.getMinutes())+pad(now.getSeconds());
+  const ids=['h1','h2','m1','m2','s1','s2'];
+  ids.forEach((id,i)=>{
+    const digit=document.getElementById(id);
+    const front=digit.querySelector('.front');
+    const back=digit.querySelector('.back');
+    const newVal=time[i];
+    if(front.textContent!==newVal){
+      back.textContent=newVal;
+      digit.classList.add('flip');
+      setTimeout(()=>{
+        front.textContent=newVal;
+        digit.classList.remove('flip');
+      },600);
+    }
+  });
+}
+setInterval(updateClock,1000);
+updateClock();
+</script>
+</body>
+</html>
